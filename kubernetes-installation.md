@@ -61,7 +61,7 @@ kubectl get pods -n kube-system -w
 kubectl get nodes
 kubectl get pods -A
 
-# join Nodes 
+# join Nodes Repeat above steps except kubeadm init because only Master will use kubeadm init worker will use kubeadm join after installing all packege use kubejoin
 sudo kubeadm join <control-plane-ip>:6443 --token <token> --discovery-token-ca-cert-hash sha256:<hash>
 
 
