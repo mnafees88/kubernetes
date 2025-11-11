@@ -49,3 +49,10 @@ kubeadm token create --print-join-command
 
 # verify all service of master node running state
 kubectl get pods --all-namespaces
+
+# Install CNI for virtual network for kubernetes only for master nodes
+# Calico manifest (example Calico or Flannel)
+kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+Or for 
+Flannel: kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
+
