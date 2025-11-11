@@ -52,7 +52,7 @@ kubectl get pods --all-namespaces
 
 # Install CNI for virtual network for kubernetes only for master nodes
 # Calico manifest (example Calico or Flannel)
-kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml (full-featured networking + network security polices for 1000+ nodes)
 Or for 
-Flannel: kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
+Flannel: kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml (lightweight for local use for 100 nodes)
 
