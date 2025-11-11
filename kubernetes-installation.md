@@ -41,7 +41,7 @@ sudo kubeadm init --pod-network-cidr=192.168.0.0/16
 # after above command completes succesfuly Output will give you kubeadm join ... command for worker (copy it). If you missed it, on control-plane run below command any time
 kubeadm token create --print-join-command
 
-# Configure kubectl for your user on all 
+# Configure kubectl for your user on Master Node
 1.mkdir -p $HOME/.kube
 2.sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 3.sudo chown $(id -u):$(id -g) $HOME/.kube/config
