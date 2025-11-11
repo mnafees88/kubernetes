@@ -47,4 +47,5 @@ kubeadm token create --print-join-command
 3.sudo chown $(id -u):$(id -g) $HOME/.kube/config
 4.export kubeconfig=/etc/kubernetes/admin.conf
 
-
+# verify all service of master node running state
+kubectl get pods --all-namespaces
