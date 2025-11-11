@@ -29,3 +29,12 @@ sudo systemctl enable containerd
 systemctl status containerd.service
   
 # Install kubeadm, kubelet, kubectl (same on all nodes)
+1.sudo apt update
+2.sudo apt install -y apt-transport-https ca-certificates curl
+3.curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg  https://packages.cloud.google.com/apt/doc/apt-key.gpg
+4.echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+5.sudo apt install -y kubelet kubeadm kubectl
+6.sudo apt-mark hold kubelet kubeadm kubectl
+7.modprob br_netfilter
+# start kubeadmin if you want to create more than 255 node than use cidr as per your requirement
+sudo kubeadm init --pod-network-cidr=192.168.0.0/16
