@@ -55,4 +55,13 @@ kubectl get pods --all-namespaces
 kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml (full-featured networking + network security polices for 1000+ nodes)
 Or for 
 Flannel: kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml (lightweight for local use for 100 nodes)
+# wait until CNI pods are Running
+kubectl get pods -n kube-system -w
+# Now check nodes status
+kubectl get nodes
+kubectl get pods -A
+
+# join Nodes 
+sudo kubeadm join <control-plane-ip>:6443 --token <token> --discovery-token-ca-cert-hash sha256:<hash>
+
 
