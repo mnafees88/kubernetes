@@ -45,10 +45,13 @@ sudo kubeadm init --pod-network-cidr=192.168.0.0/16
 
 # then use below command to enable IP4
 1. sudo sysctl -w net.ipv4.ip_forward=1
-2. 
+
 # Verify Entery added to conf
 1. echo "net.ipv4.ip_forward = 1" | sudo tee /etc/sysctl.d/99-kubernetes-ipforward.conf
 2. sudo sysctl --system
+3. 
+# Now use again kubeadmin
+1. sudo kubeadm init --pod-network-cidr=192.168.0.0/16
 
 # after above command completes succesfuly Output will give you kubeadm join ... command for worker (copy it). If you missed it, on control-plane run below command any time
 kubeadm token create --print-join-command
