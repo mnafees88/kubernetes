@@ -72,16 +72,19 @@ Flannel is an open-source Container Network Interface (CNI) plugin that creates 
 kubeadm token create --print-join-command
 
 ### Worker Node
+# use all the step from 1 to 21 and then use kube admin join
 
 Just like we did install Containerd, Kubeadm, Kubelet and Kubectl on the master node, we have to install these packages on the worker node as well. There is an important point to remember that we don't have to run kubeadm init on the worker node, instead we have to run kubeadm join to join the worker node with the master node to create a Kubernetes cluster. The command should look like:
 
 `kubeadm join <master-ip>:6443 --token <token> --discovery-token-ca-cert-hash sha256:<hash>`
+# Node after join Master
+<img width="933" height="303" alt="image" src="https://github.com/user-attachments/assets/dc523fb2-effb-4bb7-85b3-fad99fa0964d" />
 
-# Configure kubectl for your user on Master Node
-1.mkdir -p $HOME/.kube
-2.sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-3.sudo chown $(id -u):$(id -g) $HOME/.kube/config
-4.export kubeconfig=/etc/kubernetes/admin.conf
+# we can also verify on Master
+
+<img width="481" height="69" alt="image" src="https://github.com/user-attachments/assets/c9104135-4b81-4d2f-bd19-516401daedd3" />
+
+
 
 # verify all service of master node running state
 kubectl get pods --all-namespaces
