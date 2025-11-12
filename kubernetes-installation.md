@@ -61,7 +61,7 @@ Flannel is an open-source Container Network Interface (CNI) plugin that creates 
 
 26. `kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml`
 
-We are done with the Master Node.
+# We are done with the Master Node.
 <img width="508" height="53" alt="image" src="https://github.com/user-attachments/assets/a2d90d47-e768-4626-b5e8-9318dcebe6ef" />
 # All the name spaces status should be running 
 <img width="773" height="177" alt="image" src="https://github.com/user-attachments/assets/24fef156-6046-4b6f-8b85-221327a074dc" />
