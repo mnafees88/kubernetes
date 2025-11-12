@@ -5,56 +5,67 @@ step 1 to disabled swap memory (because Kubernetes relies on predictable memory 
 2. sed -i '/swap/d' /etc/fstab 
 
 # Update Ubuntu 
+After that we need to run the following commands to install Containerd:
 
-1. sudo apt-get update
-2. sudo apt install apt-transport-https curl
-3. sudo mkdir -p /etc/apt/keyrings
-4. curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-5. echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+1. `sudo apt-get update`
+2. `sudo apt install apt-transport-https curl`
+3. `sudo mkdir -p /etc/apt/keyrings`
+4. `curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg`
+5. `echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null.`
+6. `sudo apt-get update`
+7. `sudo apt-get install containerd.io`
+8. `sudo mkdir -p /etc/containerd`
+9. `sudo containerd config default | sudo tee /etc/containerd/config.toml`
+10. `sudo nano /etc/containerd/config.toml [set SystemdCgroup = true]`
+11. `sudo systemctl restart containerd`
 
-6. sudo apt update
-7. sudo apt install -y containerd.io
+
+The purpose of setting SystemdCgroup = true in the config.toml file of containerd is to enable the use of systemd for managing cgroups (control groups) for containers.
+
+Containered Should be Installed Now....
 
 
-# configure containerd
-sudo mkdir -p /etc/containerd
-sudo containerd config default | sudo tee /etc/containerd/config.toml
+### Install Kubernetes [kubeadm, kubelet, kubectl]
 
-# ensure Systemd cgroup driver
-1. sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
+13. `curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg`
+14. `echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list`
+15. `sudo apt update`
+16. `sudo apt install -y kubelet kubeadm kubectl`
+17. `sudo apt-mark hold kubelet kubeadm kubectl`
+18. `modprobe br_netfilter`
+19. `cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf`
 
-1. sudo systemctl restart containerd
-2. sudo systemctl enable containerd
+`net.bridge.bridge-nf-call-iptables  = 1`
 
-# verify container service running fine
-systemctl status containerd.service
-  
-# Install kubeadm, kubelet, kubectl (same on all nodes)
-1. sudo apt update
-2. sudo apt install -y apt-transport-https ca-certificates curl
-3. curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg  https://packages.cloud.google.com/apt/doc/apt-key.gpg
-4. echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-5. sudo apt install -y kubelet kubeadm kubectl
-6. sudo apt-mark hold kubelet kubeadm kubectl
-7. modprobe br_netfilter
-# start kubeadmin if you want to create more than 255 node than use cidr as per your requirement
-sudo kubeadm init --pod-network-cidr=192.168.0.0/16
+`net.bridge.bridge-nf-call-ip6tables = 1`
 
-# if you get any error using above command regarding below snapshot 
-<img width="963" height="104" alt="image" src="https://github.com/user-attachments/assets/c86484e1-9cb3-40d9-b60d-430ec5cd4a27" />
+`net.ipv4.ip_forward                 = 1`
 
-# then use below command to enable IP4
-1. sudo sysctl -w net.ipv4.ip_forward=1
+`EOF`
 
-# Verify Entery added to conf
-1. echo "net.ipv4.ip_forward = 1" | sudo tee /etc/sysctl.d/99-kubernetes-ipforward.conf
-2. sudo sysctl --system
-3. 
-# Now use again kubeadmin
-1. sudo kubeadm init --pod-network-cidr=192.168.0.0/16
+21. `sysctl --system`
+22.  `kubeadm init --pod-network-cidr=10.244.0.0/16` ==> Run this command only on Master node.
 
-# after above command completes succesfuly Output will give you kubeadm join ... command for worker (copy it). If you missed it, on control-plane run below command any time
-kubeadm token create --print-join-command
+### KubeConfig Setup
+
+22. `mkdir -p $HOME/.kube`
+23. `sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config`
+24. `sudo chown $(id -u):$(id -g) $HOME/.kube/config`
+25. `export KUBECONFIG=/etc/kubernetes/admin.conf`
+
+### Install Flannel Network Plugin
+
+Flannel is an open-source Container Network Interface (CNI) plugin that creates a virtual network for containers.
+
+26. `kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml`
+
+We are done with the Master Node.
+
+### Worker Node
+
+Just like we did install Containerd, Kubeadm, Kubelet and Kubectl on the master node, we have to install these packages on the worker node as well. There is an important point to remember that we don't have to run kubeadm init on the worker node, instead we have to run kubeadm join to join the worker node with the master node to create a Kubernetes cluster. The command should look like:
+
+`kubeadm join <master-ip>:6443 --token <token> --discovery-token-ca-cert-hash sha256:<hash>`
 
 # Configure kubectl for your user on Master Node
 1.mkdir -p $HOME/.kube
@@ -67,9 +78,9 @@ kubectl get pods --all-namespaces
 
 # Install CNI for virtual network for kubernetes only for master nodes
 # Calico manifest (example Calico or Flannel)
-kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml (full-featured networking + network security polices for 1000+ nodes)
+1. kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml (full-featured networking + network security polices for 1000+ nodes)
 Or for 
-Flannel: kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml (lightweight for local use for 100 nodes)
+2. Flannel: kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml (lightweight for local use for 100 nodes)
 # wait until CNI pods are Running
 kubectl get pods -n kube-system -w
 # Now check nodes status
