@@ -1,7 +1,8 @@
 # UBUNTU
 step 1 to disabled swap memory (because Kubernetes relies on predictable memory usage so that Kubernetes should have actual memory )
-1.sudo swapoff -a
-2.sed -i '/swap/d' /etc/fstab 
+
+1. sudo swapoff -a
+2. sed -i '/swap/d' /etc/fstab 
 
 # Update Ubuntu 
 
