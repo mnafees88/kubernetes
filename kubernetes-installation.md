@@ -21,10 +21,10 @@ sudo mkdir -p /etc/containerd
 sudo containerd config default | sudo tee /etc/containerd/config.toml
 
 # ensure Systemd cgroup driver
-sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
+1. sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
 
-sudo systemctl restart containerd
-sudo systemctl enable containerd
+1. sudo systemctl restart containerd
+2. sudo systemctl enable containerd
 
 # verify container service running fine
 systemctl status containerd.service
