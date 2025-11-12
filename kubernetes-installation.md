@@ -45,6 +45,8 @@ Containered Should be Installed Now....
 
 21. `sysctl --system`
 22.  `kubeadm init --pod-network-cidr=10.244.0.0/16` ==> Run this command only on Master node.
+### IF all goes Ok you will get this status
+<img width="977" height="327" alt="image" src="https://github.com/user-attachments/assets/76f47f9e-6391-4e65-8d6b-c59b9d24867c" />
 
 ### KubeConfig Setup
 
