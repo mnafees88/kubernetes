@@ -42,8 +42,10 @@ sudo kubeadm init --pod-network-cidr=192.168.0.0/16
 
 # if you get any error using above command regarding below snapshot 
 <img width="963" height="104" alt="image" src="https://github.com/user-attachments/assets/c86484e1-9cb3-40d9-b60d-430ec5cd4a27" />
-then use below command to enable IP4
+
+# then use below command to enable IP4
 1. sudo sysctl -w net.ipv4.ip_forward=1
+2. 
 # Verify Entery added to conf
 1. echo "net.ipv4.ip_forward = 1" | sudo tee /etc/sysctl.d/99-kubernetes-ipforward.conf
 2. sudo sysctl --system
