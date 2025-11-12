@@ -39,6 +39,15 @@ systemctl status containerd.service
 7. modprobe br_netfilter
 # start kubeadmin if you want to create more than 255 node than use cidr as per your requirement
 sudo kubeadm init --pod-network-cidr=192.168.0.0/16
+
+# if you get any error using above command regarding below snapshot 
+<img width="963" height="104" alt="image" src="https://github.com/user-attachments/assets/c86484e1-9cb3-40d9-b60d-430ec5cd4a27" />
+then use below command to enable IP4
+1. sudo sysctl -w net.ipv4.ip_forward=1
+# Verify Entery added to conf
+1. echo "net.ipv4.ip_forward = 1" | sudo tee /etc/sysctl.d/99-kubernetes-ipforward.conf
+2. sudo sysctl --system
+
 # after above command completes succesfuly Output will give you kubeadm join ... command for worker (copy it). If you missed it, on control-plane run below command any time
 kubeadm token create --print-join-command
 
