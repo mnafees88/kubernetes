@@ -163,7 +163,8 @@ Step 1️⃣: Setup Keepalived + HAProxy (for VIP)
 
 sudo apt install -y keepalived haproxy
 
-# /etc/haproxy/haproxy.cfg
+# nano /etc/haproxy/haproxy.cfg
+
 frontend kubernetes_api_frontend
     bind *:6443
     mode tcp
@@ -183,7 +184,9 @@ Enable + restart HAProxy:
 1. sudo systemctl enable haproxy
 2. sudo systemctl restart haproxy
 
-/etc/keepalived/keepalived.conf
+# 1st check your interface and ip address "ip addr show"
+
+# nano /etc/keepalived/keepalived.conf
 
 # On node1 (MASTER):
 
