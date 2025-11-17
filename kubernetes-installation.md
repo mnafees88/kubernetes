@@ -127,19 +127,19 @@ kube-controller-manager / scheduler	Run on all masters, only one active at a tim
 Keepalived or LoadBalancer (HAProxy, Nginx, cloud LB)	Provides a single Virtual IP (VIP) shared by all masters.
 kubeadm HA mode	Helps bootstrap multiple control planes.
 🏗️ 3. Typical Architecture (Bare-metal)
-        +-----------------------+
-        |     Virtual IP (VIP)  |  <-- Provided by Keepalived / HAProxy
-        |   192.168.1.100:6443  |
-        +-----------+-----------+
-                    |
-   +----------------+----------------+
-   |                |                |
-+--+--+          +--+--+          +--+--+
-| CP1 |          | CP2 |          | CP3 |
-| (Master 1)     | (Master 2)     | (Master 3)
-| kube-apiserver | kube-apiserver | kube-apiserver
-| etcd           | etcd           | etcd
-+----------------+----------------+----------------+
+   #     +-----------------------+
+   #     |     Virtual IP (VIP)  |  <-- Provided by Keepalived / HAProxy
+   #     |   192.168.1.100:6443  |
+   #     +-----------+-----------+
+   #                |
+#   +----------------+----------------+
+#   |                |                |
+# +--+--+          +--+--+          +--+--+
+# | CP1 |          | CP2 |          | CP3 |
+# | (Master 1)     | (Master 2)     | (Master 3)
+# | kube-apiserver | kube-apiserver | kube-apiserver
+# | etcd           | etcd           | etcd
+# +----------------+----------------+----------------+
 
 
 # All your workers connect to the VIP (192.168.1.100:6443) instead of an individual master.
