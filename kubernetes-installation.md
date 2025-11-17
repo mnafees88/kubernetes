@@ -128,19 +128,19 @@ Keepalived or LoadBalancer (HAProxy, Nginx, cloud LB)	Provides a single Virtual 
 kubeadm HA mode	Helps bootstrap multiple control planes.
 🏗️ 3. Typical Architecture (Bare-metal)
 ```text
-     +-----------------------+
-     |     Virtual IP (VIP)  |  <-- Provided by Keepalived / HAProxy
-     |   192.168.1.100:6443  |
-     +-----------+-----------+
-                  |
-      +----------------+----------------+
-      |                |                |
-    +--+--+          +--+--+          +--+--+
-    | CP1 |          | CP2 |          | CP3 |
-    | (Master 1)     | (Master 2)     | (Master 3)
-    | kube-apiserver | kube-apiserver | kube-apiserver
-    | etcd           | etcd           | etcd
-    +----------------+----------------+----------------+
+        +-----------------------+
+        |     Virtual IP (VIP)  |  <-- Provided by Keepalived / HAProxy
+        |   192.168.1.100:6443  |
+        +-----------+-----------+
+                    |
+   +----------------+----------------+
+   |                |                |
++--+--+          +--+--+          +--+--+
+| CP1 |          | CP2 |          | CP3 |
+| (Master 1)     | (Master 2)     | (Master 3)
+| kube-apiserver | kube-apiserver | kube-apiserver
+| etcd           | etcd           | etcd
++----------------+----------------+----------------+
 ```
 
 
