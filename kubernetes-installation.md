@@ -156,13 +156,14 @@ node1	master-1	192.168.1.10
 node2	master-2	192.168.1.11
 node3	worker	192.168.1.12
 VIP	shared via Keepalived	192.168.1.100
+
 Step 1️⃣: Setup Keepalived + HAProxy (for VIP)
 
 # Install on both node1 and node2:
 
 sudo apt install -y keepalived haproxy
 
-/etc/haproxy/haproxy.cfg
+# /etc/haproxy/haproxy.cfg
 frontend kubernetes_api_frontend
     bind *:6443
     mode tcp
@@ -179,12 +180,12 @@ backend kubernetes_api_backend
 
 Enable + restart HAProxy:
 
-sudo systemctl enable haproxy
-sudo systemctl restart haproxy
+1. sudo systemctl enable haproxy
+2. sudo systemctl restart haproxy
 
 /etc/keepalived/keepalived.conf
 
-On node1 (MASTER):
+# On node1 (MASTER):
 
 vrrp_instance VI_1 {
     state MASTER
@@ -202,7 +203,7 @@ vrrp_instance VI_1 {
 }
 
 
-On node2 (BACKUP):
+# On node2 (BACKUP):
 
 vrrp_instance VI_1 {
     state BACKUP
@@ -222,28 +223,25 @@ vrrp_instance VI_1 {
 
 Restart:
 
-sudo systemctl restart keepalived
+1. sudo systemctl restart keepalived
 
 
 # ✅ Now 192.168.1.100 will float between node1 and node2 automatically.
 
 Step 2️⃣: Initialize first control-plane
 
-On node1:
+# On node1:
 
-sudo kubeadm init \
-  --control-plane-endpoint "192.168.1.100:6443" \
-  --upload-certs \
-  --pod-network-cidr=192.168.0.0/16
+sudo kubeadm init --control-plane-endpoint "192.168.1.100:6443" --upload-certs --pod-network-cidr=192.168.0.0/16
 
 
-When it finishes, it will output a join command — copy both:
+# When it finishes, it will output a join command — copy both:
 
-Worker join
+# Worker join
 
-Control-plane join (with --control-plane and --certificate-key)
+# Control-plane join (with --control-plane and --certificate-key)
 
-Setup kubectl on node1:
+# Setup kubectl on node1:
 
 mkdir -p $HOME/.kube
 sudo cp /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -252,37 +250,34 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 # Install network plugin (Flannel or Calico):
 
-1.kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
+1. kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
+
 OR
-2.kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+
+3. kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 
 # Step 3️⃣: Join the 2nd control-plane (node2)
 
-On node2, run the command printed from kubeadm init, e.g.:
+# On node2, run the command printed from kubeadm init, e.g.:
 
 sudo kubeadm join 192.168.1.100:6443 \
-  --token <token> \
-  --discovery-token-ca-cert-hash sha256:<hash> \
-  --control-plane \
-  --certificate-key <key>
+  --token <token> --discovery-token-ca-cert-hash sha256:<hash> --control-plane --certificate-key <key>
 
-Step 4️⃣: Join worker nodes
+# Step 4️⃣: Join worker nodes
 
-On node3 (and others):
+# On node3 (and others):
 
-sudo kubeadm join 192.168.1.100:6443 \
-  --token <token> \
-  --discovery-token-ca-cert-hash sha256:<hash>
+sudo kubeadm join 192.168.1.100:6443 --token <token> --discovery-token-ca-cert-hash sha256:<hash>
 
-Step 5️⃣: Verify cluster
+# Step 5️⃣: Verify cluster
 
-On node1:
+# On node1:
 
 kubectl get nodes
 kubectl get pods -A
 
 
-If node1 (master) fails:
+# If node1 (master) fails:
 
 Keepalived VIP automatically moves to node2
 
@@ -297,9 +292,15 @@ It rejoins automatically as secondary control-plane.
 ✅ You now have an automatic failover master system.
 
 ⚡ 5. Summary
+
 Feature	Behavior
+
 Primary Master Down	Secondary takes VIP and control-plane continues
+
 Primary Comes Back	Rejoins cluster, becomes secondary again
+
 API Endpoint	Always reachable via VIP (192.168.1.100:6443)
+
 etcd	Replicated automatically between masters
+
 Scheduler & Controller	Run on both, leader elected automatically
