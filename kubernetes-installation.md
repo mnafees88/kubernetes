@@ -226,10 +226,23 @@ vrrp_instance VI_1 {
 
 Restart:
 
-1. sudo systemctl restart keepalived
+# 1. sudo systemctl restart keepalived
 
 
 # ✅ Now 192.168.1.100 will float between node1 and node2 automatically.
+
+# if HA successfuly done you can ping the HA IP i am using 172.16.0.100 for HA IP and will ping from both master 1 and maser 2
+
+# Master1 ping 172.16.0.100
+# Master2 ping 172.16.0.100
+
+# Master 1
+<img width="1002" height="446" alt="image" src="https://github.com/user-attachments/assets/920ab9f2-8ade-48e1-8d1c-9610aea04420" />
+
+
+# Master 2
+<img width="557" height="137" alt="image" src="https://github.com/user-attachments/assets/adc9da7b-4a85-4b38-b002-71bb3e86d818" />
+
 
 Step 2️⃣: Initialize first control-plane
 
