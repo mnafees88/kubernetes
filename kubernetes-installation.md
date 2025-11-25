@@ -337,3 +337,4 @@ Scheduler & Controller	Run on both, leader elected automatically
 
 1. `kubectl rollout restart ds/kube-flannel-ds -n kube-flannel`
 
+<img width="822" height="197" alt="image" src="https://github.com/user-attachments/assets/8f056de7-858d-4f19-be3c-58faf805ec6c" />
