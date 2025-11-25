@@ -19,6 +19,10 @@ After that we need to run the following commands to install Containerd:
 10. `sudo nano /etc/containerd/config.toml [set SystemdCgroup = true]`
 <img width="756" height="193" alt="image" src="https://github.com/user-attachments/assets/05e9f3a3-efc5-43f5-8d2f-f79342f8eb4b" />
 
+# if the value Cgroup didnt set to true you will face this error 
+
+<img width="869" height="57" alt="image" src="https://github.com/user-attachments/assets/9be34b14-5370-4644-a09d-2da0224462cf" />
+
 
 11. `sudo systemctl restart containerd`
 
