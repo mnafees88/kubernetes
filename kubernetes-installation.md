@@ -16,7 +16,8 @@ After that we need to run the following commands to install Containerd:
 7. `sudo apt-get install containerd.io`
 8. `sudo mkdir -p /etc/containerd`
 9. `sudo containerd config default | sudo tee /etc/containerd/config.toml`
-10. `sudo nano /etc/containerd/config.toml [set SystemdCgroup = true]`
+10. `sudo nano /etc/containerd/config.toml`
+11.` change the valuse and set to [set SystemdCgroup = true]`
 <img width="756" height="193" alt="image" src="https://github.com/user-attachments/assets/05e9f3a3-efc5-43f5-8d2f-f79342f8eb4b" />
 
 # if the value Cgroup didnt set to true you will face this error 
