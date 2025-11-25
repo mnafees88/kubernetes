@@ -330,3 +330,10 @@ API Endpoint	Always reachable via VIP (192.168.1.100:6443)
 etcd	Replicated automatically between masters
 
 Scheduler & Controller	Run on both, leader elected automatically
+
+# Trouble shoot command how to restart pod service which crash #
+
+<img width="959" height="166" alt="image" src="https://github.com/user-attachments/assets/46fc7687-95a0-43b4-ba8d-cff0c35ca34c" />
+
+1. `kubectl rollout restart ds/kube-flannel-ds -n kube-flannel`
+
